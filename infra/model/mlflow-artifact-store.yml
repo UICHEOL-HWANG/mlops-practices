@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlflow-artifact-store
+spec:
+  ports:
+  - name: minio-web
+    port: 9000
+  - name: minio-console
+    port: 9001
+  selector:
+    app: mlflow-artifact-store
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlflow-artifact-store
+spec:
+  selector:
+    matchLabels:
+      app: mlflow-artifact-store
+  template:
+    metadata:
+      labels:
+        app: mlflow-artifact-store
+    spec:
+      containers:
+      - name: minio
+        image: minio/minio:RELEASE.2024-01-18T22-51-28Z
+        args:
+        - server
+        - /data/minio
+        - --console-address
+        - ":9001"
+        env:
+        - name: MINIO_ROOT_USER
+          value: "minio"
+        - name: MINIO_ROOT_PASSWORD
+          value: "miniostorage"
+        ports:
+        - containerPort: 9000
+        - containerPort: 9001

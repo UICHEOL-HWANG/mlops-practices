@@ -270,6 +270,7 @@ __pypackages__/
 # Celery stuff
 celerybeat-schedule
 celerybeat.pid
+cheorish_key.json
 
 # SageMath parsed files
 *.sage.py

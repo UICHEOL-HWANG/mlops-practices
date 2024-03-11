@@ -1,9 +1,6 @@
-import mlflow
 import pandas as pd 
 from fastapi import FastAPI
-from schemas import PredictIn, PredictOut
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-from router.data import data_serve
 from fastapi.middleware.cors import CORSMiddleware
 
 

@@ -40,7 +40,7 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: LoadBalencer
+  type: LoadBalancer
   port: 8000
 
 ingress:

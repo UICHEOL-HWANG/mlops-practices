@@ -40,8 +40,6 @@ jobs:
         argocd login $ARGOCD_IP --username $ARGOCD_ID --password $ARGOCD_PW --insecure
 
     - name: Deploy to Kubernetes using Argo CD
-      env:
-        CI_PROJECT_NAME: asia-northeast3-docker.pkg.dev 
       run: |
         argocd app create $CI_PROJECT_NAME \
           --repo asia-northeast3-docker.pkg.dev \

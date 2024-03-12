@@ -43,8 +43,8 @@ jobs:
       run: |
         argocd app create $CI_PROJECT_NAME \
           --repo asia-northeast3-docker.pkg.dev \
-          --helm-chart mlops-project-411103/helm/mlops-helm \
-          --helm-set image.name=asia-northeast3-docker.pkg.dev/mlops-project-411103/docker/mlops-app \
+          --helm-chart cheorish/helm/api-helm \
+          --helm-set image.name=asia-northeast3-docker.pkg.dev/cheorish/docker/api \
           --revision 0.0.4 \
           --dest-server https://kubernetes.default.svc \
           --dest-namespace api \

@@ -1,0 +1,56 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest  # 러너 환경
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Login to Google Cloud
+      env:
+        GCP_KEY: ${{ secrets.GCP_KEY }}  # GitHub Secrets에서 GCP_KEY를 가져옴
+      run: |
+        echo $GCP_KEY | cat > ./key.json
+        cat ./key.json | docker login -u _json_key --password-stdin asia-northeast3-docker.pkg.dev
+
+    - name: Build and push Docker image
+      working-directory: ./deploy/api
+      run: |
+        docker build . -t asia-northeast3-docker.pkg.dev/cheorish/docker/api
+        docker push asia-northeast3-docker.pkg.dev/cheorish/docker/api
+
+
+    - name: Install Argo CD CLI
+      run: |
+        curl -sSL -o argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+        sudo install -m 555 argocd /usr/local/bin/argocd
+        sudo chmod +x /usr/local/bin/argocd
+        rm argocd
+
+    - name: Login to Argo CD
+      env:
+        ARGOCD_IP: ${{ secrets.ARGOCD_IP }}
+        ARGOCD_ID: ${{ secrets.ARGOCD_ID }}
+        ARGOCD_PW: ${{ secrets.ARGOCD_PW }}
+      run: |
+        argocd login $ARGOCD_IP --username $ARGOCD_ID --password $ARGOCD_PW --insecure
+
+    - name: Deploy to Kubernetes using Argo CD
+      run: |
+        argocd app create mlops-api \
+          --repo asia-northeast3-docker.pkg.dev \
+          --helm-chart cheorish/helm/api-helm \
+          --helm-set image.name=asia-northeast3-docker.pkg.dev/cheorish/docker/api \
+          --revision 0.0.2 \
+          --dest-server https://kubernetes.default.svc \
+          --dest-namespace api \
+          --upsert
+        argocd app get mlops-api --hard-refresh
+        argocd app sync mlops-api
+        argocd app actions run mlops-api restart --kind Deployment

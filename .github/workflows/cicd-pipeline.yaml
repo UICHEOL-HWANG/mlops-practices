@@ -43,7 +43,7 @@ jobs:
 
     - name: Deploy to Kubernetes using Argo CD
       run: |
-        argocd app create $CI_PROJECT_NAME \
+        argocd app create mlops-api \
           --repo asia-northeast3-docker.pkg.dev \
           --helm-chart cheorish/helm/api-helm \
           --helm-set image.name=asia-northeast3-docker.pkg.dev/cheorish/docker/api \
@@ -51,6 +51,6 @@ jobs:
           --dest-server https://kubernetes.default.svc \
           --dest-namespace api \
           --upsert
-        argocd app get $CI_PROJECT_NAME --hard-refresh
-        argocd app sync $CI_PROJECT_NAME
-        argocd app actions run $CI_PROJECT_NAME restart --kind Deployment
+        argocd app get $mlops-api --hard-refresh
+        argocd app sync $mlops-api
+        argocd app actions run $mlops-api restart --kind Deployment

@@ -20,9 +20,11 @@ jobs:
         cat ./key.json | docker login -u _json_key --password-stdin asia-northeast3-docker.pkg.dev
 
     - name: Build and push Docker image
+      working-directory: ./deploy/api
       run: |
         docker build . -t asia-northeast3-docker.pkg.dev/cheorish/docker/api
         docker push asia-northeast3-docker.pkg.dev/cheorish/docker/api
+
 
     - name: Install Argo CD CLI
       run: |

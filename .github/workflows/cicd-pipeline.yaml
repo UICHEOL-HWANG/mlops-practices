@@ -28,7 +28,6 @@ jobs:
 
     - name: Install Argo CD CLI
       run: |
-        apk add curl
         curl -sSL -o argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
         install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
         sudo chmod +x /usr/local/bin/argocd

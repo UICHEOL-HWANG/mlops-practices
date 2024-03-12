@@ -53,4 +53,4 @@ jobs:
           --upsert
         argocd app get mlops-api --hard-refresh
         argocd app sync mlops-api
-        argocd app actions run $mlops-api restart --kind Deployment
+        argocd app actions run mlops-api restart --kind Deployment

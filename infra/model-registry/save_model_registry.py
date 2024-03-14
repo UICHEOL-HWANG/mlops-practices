@@ -53,7 +53,8 @@ class MNISTDataset(Dataset):
     def __getitem__(self, idx):
         self.cursor.execute("SELECT image_data, label FROM mnist_images LIMIT 1 OFFSET %s", (idx,))
         image_data, label = self.cursor.fetchone()
-        image = Image.open(io.BytesIO(image_data))
+        # BytesIO 객체에서 PIL 이미지를 읽어옴
+        image = Image.open(io.BytesIO(image_data)).convert('L')
         if self.transform:
             image = self.transform(image)
         return image, label

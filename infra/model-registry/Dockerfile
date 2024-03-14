@@ -2,6 +2,7 @@
 FROM python:3.8-slim
 
 # 필요한 라이브러리 설치
+RUN apt-get update && apt-get install -y git
 RUN pip install torch torchvision mlflow psycopg2-binary
 
 # 스크립트 추가

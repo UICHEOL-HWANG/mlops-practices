@@ -5,7 +5,6 @@ on:
     branches:
       - master
     paths:
-      - 'infra/model-registry/**'
       
       # 특정 파드 생성용 CI 
 jobs:
@@ -23,10 +22,10 @@ jobs:
           cat ./key.json | docker login -u _json_key --password-stdin asia-northeast3-docker.pkg.dev
 
       - name: Build and push Docker image
-        working-directory: ./infra/model-registry
+        working-directory: ./infra/model-create
         run: |
-          docker build . -t asia-northeast3-docker.pkg.dev/cheorish/docker/model-save
-          docker push asia-northeast3-docker.pkg.dev/cheorish/docker/model-save
+          docker build . -t asia-northeast3-docker.pkg.dev/cheorish/docker/model-create
+          docker push asia-northeast3-docker.pkg.dev/cheorish/docker/model-create
         
       - name: Install Argo CD CLI
         run: |
@@ -45,16 +44,16 @@ jobs:
 
       - name: Create Argo CD App
         run: |
-          argocd app create model-save \
+          argocd app create model-create \
             --repo https://github.com/UICHEOL-HWANG/mlops-practices.git \
-            --path infra/model-registry \
+            --path infra/model-create \
             --dest-server https://kubernetes.default.svc \
-            --dest-namespace model-save
+            --dest-namespace model-create
 
       - name: Sync Argo CD App
         run: |
-          argocd app sync model-save
+          argocd app sync model-create
 
       - name: Wait for Argo CD App to be synced
         run: |
-          argocd app wait model-save --sync
+          argocd app wait model-create --sync

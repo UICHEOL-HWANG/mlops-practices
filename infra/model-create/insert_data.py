@@ -23,9 +23,12 @@ mnist_dataset = datasets.MNIST('data', train=True, download=True, transform=tran
 
 # PostgreSQL에 데이터 삽입
 for image, label in mnist_dataset:
-    # 이미지 데이터를 바이트로 변환
+    # 이미지를 BytesIO 객체로 변환
     buffer = io.BytesIO()
-    torch.save(image, buffer)
+    # PIL 이미지로 변환
+    pil_image = transforms.ToPILImage()(image)
+    # PIL 이미지를 BytesIO 객체로 저장
+    pil_image.save(buffer, format="JPEG")
     buffer.seek(0)
     image_data = buffer.read()
 

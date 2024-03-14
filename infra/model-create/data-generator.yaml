@@ -1,41 +1,21 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
-  name: data-generator
+  name: data-generator-job
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: data-generator
   template:
-    metadata:
-      labels:
-        app: data-generator
     spec:
       containers:
       - name: data-generator
-        image: asia-northeast3-docker.pkg.dev/cheorish/docker/model-create 
+        image: asia-northeast3-docker.pkg.dev/cheorish/docker/model-create
         command: ["/bin/bash", "-c"]
-        args: ["./run_scripts.sh"]  
-        ports:
-        - containerPort: 80 
+        args: ["./run_scripts.sh"]
         env:
         - name: POSTGRES_USER
-          value: myuser  # PostgreSQL 사용자 이름
+          value: myuser
         - name: POSTGRES_PASSWORD
-          value: mypassword  # PostgreSQL 암호
+          value: mypassword
         - name: POSTGRES_DB
-          value: mydatabase  # PostgreSQL 데이터베이스 이름
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: data-generator-service
-spec:
-  selector:
-    app: data-generator
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 80  
-  type: ClusterIP  
+          value: mydatabase
+      restartPolicy: Never
+  backoffLimit: 0

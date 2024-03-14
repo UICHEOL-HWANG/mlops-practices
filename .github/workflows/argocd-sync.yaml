@@ -1,0 +1,53 @@
+name: deployment-pipeline
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'infra/model-create/Dockerfile'
+      
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Login to Google Cloud
+        env:
+          GCP_KEY: ${{ secrets.GCP_KEY }}
+        run: |
+          echo $GCP_KEY | cat > ./key.json
+          cat ./key.json | docker login -u _json_key --password-stdin asia-northeast3-docker.pkg.dev
+
+      - name: Install Argo CD CLI
+        run: |
+          curl -sSL -o argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+          sudo install -m 555 argocd /usr/local/bin/argocd
+          sudo chmod +x /usr/local/bin/argocd
+          rm argocd
+
+      - name: Login to Argo CD
+        env:
+          ARGOCD_IP: ${{ secrets.ARGOCD_IP }}
+          ARGOCD_ID: ${{ secrets.ARGOCD_ID }}
+          ARGOCD_PW: ${{ secrets.ARGOCD_PW }}
+        run: |
+          argocd login $ARGOCD_IP --username $ARGOCD_ID --password $ARGOCD_PW --insecure
+
+      - name: Create Argo CD App
+        run: |
+          argocd app create ml-repo \
+            --repo https://github.com/UICHEOL-HWANG/mlops-practices.git \
+            --path infra/model-create \
+            --dest-server https://kubernetes.default.svc \
+            --dest-namespace model-create
+
+      - name: Sync Argo CD App
+        run: |
+          argocd app sync ml-repo
+
+      - name: Wait for Argo CD App to be synced
+        run: |
+          argocd app wait ml-repo --sync

@@ -15,3 +15,4 @@ COPY create_mnist_table.py insert_data.py run_scripts.sh ./
 RUN chmod +x run_scripts.sh
 
 CMD ["./run_scripts.sh"]
+# inster_data.py 내용 -> run_scripts.sh

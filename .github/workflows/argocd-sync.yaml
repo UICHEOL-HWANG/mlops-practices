@@ -18,6 +18,12 @@ jobs:
         run: |
           echo $GCP_KEY | cat > ./key.json
           cat ./key.json | docker login -u _json_key --password-stdin asia-northeast3-docker.pkg.dev
+      
+      - name: Build and push Docker image
+        working-directory: ./infra/model-create
+        run: |
+          docker build . -t asia-northeast3-docker.pkg.dev/cheorish/docker/model-create
+          docker push asia-northeast3-docker.pkg.dev/cheorish/docker/model-create 
 
       - name: Install Argo CD CLI
         run: |
@@ -33,14 +39,6 @@ jobs:
           ARGOCD_PW: ${{ secrets.ARGOCD_PW }}
         run: |
           argocd login $ARGOCD_IP --username $ARGOCD_ID --password $ARGOCD_PW --insecure
-
-      - name: Create Argo CD App
-        run: |
-          argocd app create ml-repo \
-            --repo https://github.com/UICHEOL-HWANG/mlops-practices.git \
-            --path infra/model-create \
-            --dest-server https://kubernetes.default.svc \
-            --dest-namespace model-create
 
       - name: Sync Argo CD App
         run: |

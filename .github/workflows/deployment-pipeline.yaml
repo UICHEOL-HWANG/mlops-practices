@@ -1,43 +1,59 @@
-# name: deployment-pipeline
+name: deployment-pipeline
 
-# on:
-#   push:
-#     branches:
-#       - master
-#     paths:
-#       - 'deploy/infra/**'
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'deploy/infra/model-create/Dockerfile'
       
-# jobs:
-#   build-and-deploy:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v2
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-#       - name: Login to Google Cloud
-#         env:
-#           GCP_KEY: ${{ secrets.GCP_KEY }}
-#         run: |
-#           echo $GCP_KEY | cat > ./key.json
-#           cat ./key.json | docker login -u _json_key --password-stdin asia-northeast3-docker.pkg.dev
+      - name: Login to Google Cloud
+        env:
+          GCP_KEY: ${{ secrets.GCP_KEY }}
+        run: |
+          echo $GCP_KEY | cat > ./key.json
+          cat ./key.json | docker login -u _json_key --password-stdin asia-northeast3-docker.pkg.dev
 
-#       - name: Check if Docker image exists
-#         id: check_image
-#         run: |
-#           IMAGE_TAG=$(git rev-parse --short HEAD) # 빌드에 고유한 태그 생성
-#           if docker manifest inspect asia-northeast3-docker.pkg.dev/cheorish/docker/model-create:$IMAGE_TAG > /dev/null; then
-#             echo "Image already exists. Skipping build and push."
-#             echo "::set-output name=skip_build::true"
-#           else
-#             echo "::set-output name=skip_build::false"
-#           fi
+      - name: Build and push Docker image
+        working-directory: ./infra/model-create
+        run: |
+          docker build . -t asia-northeast3-docker.pkg.dev/cheorish/docker/model-create
+          docker push asia-northeast3-docker.pkg.dev/cheorish/docker/model-create
+        
+      - name: Install Argo CD CLI
+        run: |
+          curl -sSL -o argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+          sudo install -m 555 argocd /usr/local/bin/argocd
+          sudo chmod +x /usr/local/bin/argocd
+          rm argocd
 
-#       - name: Build and push Docker image
-#         if: steps.check_image.outputs.skip_build != 'true' # 이미지가 없는 경우에만 빌드 및 푸시
-#         working-directory: ./infra/model-create
-#         run: |
-#           docker build . -t asia-northeast3-docker.pkg.dev/cheorish/docker/model-create:$(git rev-parse --short HEAD)
-#           docker push asia-northeast3-docker.pkg.dev/cheorish/docker/model-create:$(git rev-parse --short HEAD)
-#       - name: gcloud with apply yaml 
-#         run: |
-#             gcloud 
+      - name: Login to Argo CD
+        env:
+          ARGOCD_IP: ${{ secrets.ARGOCD_IP }}
+          ARGOCD_ID: ${{ secrets.ARGOCD_ID }}
+          ARGOCD_PW: ${{ secrets.ARGOCD_PW }}
+        run: |
+          argocd login $ARGOCD_IP --username $ARGOCD_ID --password $ARGOCD_PW --insecure
+
+      - name: Create Argo CD App
+        run: |
+          argocd app create ml-repo \
+            --repo https://github.com/UICHEOL-HWANG/mlops-practices.git \
+            --path infra/model-create/data-generator.yaml \
+            --dest-server https://kubernetes.default.svc \
+            --dest-namespace model-create
+
+      - name: Sync Argo CD App
+        run: |
+          argocd app sync ml-repo
+
+      - name: Wait for Argo CD App to be synced
+        run: |
+          argocd app wait ml-repo --sync

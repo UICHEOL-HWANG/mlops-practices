@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: data-generator
-        image: asia-northeast3-docker.pkg.dev/cheorish/docker/model-create  # 이미지 이름을 여기에 입력하세요
+        image: asia-northeast3-docker.pkg.dev/cheorish/docker/model-create 
         command: ["/bin/bash", "-c"]
         args: ["./run_scripts.sh"]  
         ports:

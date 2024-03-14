@@ -20,10 +20,10 @@ jobs:
           cat ./key.json | docker login -u _json_key --password-stdin asia-northeast3-docker.pkg.dev
 
       - name: Build and push Docker image
-        working-directory: ./infra/model-create
+        working-directory: ./infra/model-registry
         run: |
-          docker build . -t asia-northeast3-docker.pkg.dev/cheorish/docker/model-create
-          docker push asia-northeast3-docker.pkg.dev/cheorish/docker/model-create
+          docker build . -t asia-northeast3-docker.pkg.dev/cheorish/docker/model-save
+          docker push asia-northeast3-docker.pkg.dev/cheorish/docker/model-save
         
       - name: Install Argo CD CLI
         run: |
@@ -42,16 +42,16 @@ jobs:
 
       - name: Create Argo CD App
         run: |
-          argocd app create model-create \
+          argocd app create model-save \
             --repo https://github.com/UICHEOL-HWANG/mlops-practices.git \
-            --path infra/model-create \
+            --path infra/model-registry \
             --dest-server https://kubernetes.default.svc \
-            --dest-namespace model-create
+            --dest-namespace model-save
 
       - name: Sync Argo CD App
         run: |
-          argocd app sync model-create
+          argocd app sync model-save
 
       - name: Wait for Argo CD App to be synced
         run: |
-          argocd app wait model-create --sync
+          argocd app wait model-save --sync

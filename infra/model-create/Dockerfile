@@ -16,4 +16,3 @@ RUN chmod +x run_scripts.sh
 
 CMD ["./run_scripts.sh"]
 # inster_data.py 내용 -> run_scripts.sh
-# 누락 부분 재수정 푸시

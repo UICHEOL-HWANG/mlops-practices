@@ -80,8 +80,8 @@ optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # MLflow 로깅 시작
 with mlflow.start_run():
-    for epoch in range(10):  # 에포크 수
-        total_loss = 0
+    for epoch in range(1):  # 에포크 수
+        total_loss = 0 # 사정상 에포크는 1번만
         total_correct = 0
         for images, labels in dataloader:
             outputs = model(images)

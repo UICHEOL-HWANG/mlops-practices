@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - 'deploy/infra/model-create/Dockerfile'
+      - 'infra/model-create/Dockerfile'
       
 jobs:
   build-and-deploy:

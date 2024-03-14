@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - master
-    paths:
-      
       # 특정 파드 생성용 CI 
 jobs:
   build-and-deploy:

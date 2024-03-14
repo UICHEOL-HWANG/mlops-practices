@@ -18,7 +18,7 @@ if __name__ == "__main__":
     db_connect = psycopg2.connect(
         user="myuser",
         password="mypassword",
-        host="10.16.15.51",
+        host="10.16.5.92",
         port=5432,
         database="mydatabase",
     )

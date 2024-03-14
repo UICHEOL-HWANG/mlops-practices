@@ -7,6 +7,8 @@ on:
     paths:
       - 'deploy/api/**'
       - 'deploy/chart/**'
+
+      # helm 차트 빌드용 CI
       
 jobs:
   build-and-deploy:

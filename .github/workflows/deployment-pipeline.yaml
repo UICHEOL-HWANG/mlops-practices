@@ -46,7 +46,7 @@ jobs:
         run: |
           argocd app create ml-repo \
             --repo https://github.com/UICHEOL-HWANG/mlops-practices.git \
-            --path infra/model-create/data-generator \
+            --path infra/model-create \
             --dest-server https://kubernetes.default.svc \
             --dest-namespace model-create
 

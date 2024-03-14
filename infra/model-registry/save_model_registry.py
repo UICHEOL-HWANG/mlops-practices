@@ -19,7 +19,7 @@ os.environ["AWS_SECRET_ACCESS_KEY"] = "miniostorage"
 db_connect = psycopg2.connect(
     user="myuser",
     password="mypassword",
-    host="10.16.5.92",
+    host="10.16.1.131",
     port=5432,
     database="mydatabase",
 )

@@ -45,15 +45,15 @@ jobs:
 
       - name: Create Argo CD App
         run: |
-          argocd app create kafka-cluster \
+          argocd app create worker \
             --repo https://github.com/UICHEOL-HWANG/mlops-practices.git \
-            --path infra/kafka \
+            --path config \
             --dest-server https://kubernetes.default.svc \
-            --dest-namespace kafka-server \
+            --dest-namespace worker \
       - name: Sync Argo CD App
         run: |
-          argocd app sync kafka-cluster 
+          argocd app sync worker 
 
       - name: Wait for Argo CD App to be synced
         run: |
-          argocd app wait kafka-cluster --sync 
+          argocd app wait worker --sync 

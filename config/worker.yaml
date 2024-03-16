@@ -15,4 +15,3 @@ spec:
       containers:
       - name: mlops-worker
         image: uicheolhwang/mlops-worker:0.0.1
-        command: ['/bin/bash', '-c']

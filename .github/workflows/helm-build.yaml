@@ -4,8 +4,7 @@ on:
   push:
     branches:
       - master
-    paths:
-      - 'deploy/argocd'
+
 
       # helm 차트 빌드용 CI
       
@@ -51,7 +50,7 @@ jobs:
           --repo asia-northeast3-docker.pkg.dev \
           --helm-chart cheorish/helm/api-helm \
           --helm-set image.name=asia-northeast3-docker.pkg.dev/cheorish/docker/api \
-          --revision 0.0.2 \
+          --revision 0.0.3 \
           --dest-server https://kubernetes.default.svc \
           --dest-namespace api \
           --upsert

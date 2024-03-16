@@ -48,7 +48,7 @@ jobs:
         run: |
           argocd app create mlflow \
             --repo https://github.com/UICHEOL-HWANG/mlops-practices.git \
-            --path /infra/model \
+            --path infra/model \
             --dest-server https://kubernetes.default.svc \
 
       - name: Sync Argo CD App

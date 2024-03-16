@@ -46,15 +46,15 @@ jobs:
 
       - name: Create Argo CD App
         run: |
-          argocd app create main-repogitory \
+          argocd app create mlflow \
             --repo https://github.com/UICHEOL-HWANG/mlops-practices.git \
-            --path ./infra/** \
+            --path ./infra/model/** \
             --dest-server https://kubernetes.default.svc \
 
       - name: Sync Argo CD App
         run: |
-          argocd app sync main-repogitory
+          argocd app sync mlflow
 
       - name: Wait for Argo CD App to be synced
         run: |
-          argocd app wait main-repogitory --sync
+          argocd app wait mlflow --sync

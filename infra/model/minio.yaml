@@ -24,9 +24,6 @@ spec:
         ports:
         - containerPort: 9000
         - containerPort: 9001
-        volumeMounts:
-        - name: mlflow-artifact-pvc
-          mountPath: /data/minio  
 
 
 ---
@@ -45,16 +42,3 @@ spec:
     targetPort: 9001
   selector:
     app: mlflow-artifact-store
-
----
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mlflow-artifact-pvc
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 5Gi  

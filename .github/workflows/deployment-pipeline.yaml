@@ -7,7 +7,8 @@ on:
     branches:
       - master
       # 특정 파드 생성용 CI 
-
+    paths:
+      - 'deploy/argocd'
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -45,15 +46,15 @@ jobs:
 
       - name: Create Argo CD App
         run: |
-          argocd app create main-db \
+          argocd app create worker \
             --repo https://github.com/UICHEOL-HWANG/mlops-practices.git \
             --path infra/database \
             --dest-server https://kubernetes.default.svc \
-            --dest-namespace main-db \
+            --dest-namespace worker \
       - name: Sync Argo CD App
         run: |
-          argocd app sync main-db 
+          argocd app sync worker 
 
       - name: Wait for Argo CD App to be synced
         run: |
-          argocd app wait main-db --sync 
+          argocd app wait worker --sync 

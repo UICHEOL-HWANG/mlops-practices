@@ -7,6 +7,7 @@ import torch
 from PIL import Image
 import io
 import numpy as np
+import os 
 
 os.environ["MLFLOW_S3_ENDPOINT_URL"] = "http://34.64.144.27:9000"
 os.environ["MLFLOW_TRACKING_URI"] = "http://34.64.119.81:5000"

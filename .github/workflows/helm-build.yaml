@@ -63,6 +63,7 @@ jobs:
           --dest-server https://kubernetes.default.svc \
           --dest-namespace api \
           --upsert
+          
         argocd app get mlops-api --hard-refresh
         argocd app sync mlops-api
         argocd app actions run mlops-api restart --kind Deployment

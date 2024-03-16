@@ -7,8 +7,7 @@ on:
     branches:
       - master
       # 특정 파드 생성용 CI 
-    paths:
-      - 'deploy/argocd'
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest

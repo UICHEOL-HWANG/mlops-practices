@@ -15,3 +15,5 @@ spec:
       containers:
       - name: mlops-worker
         image: uicheolhwang/mlops-worker:0.0.1
+        command: ["/bin/sh"]
+        args: ["-c", "while true; do sleep 1000; done"]

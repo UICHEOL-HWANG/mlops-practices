@@ -1,12 +1,11 @@
-name: CI/CD Pipeline
+name: helm Pipeline
 
 on:
   push:
     branches:
       - master
     paths:
-      - 'deploy/api/**'
-      - 'deploy/chart/**'
+      - 'deploy/argocd'
 
       # helm 차트 빌드용 CI
       

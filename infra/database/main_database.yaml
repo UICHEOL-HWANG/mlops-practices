@@ -24,6 +24,9 @@ spec:
           value: mypassword  # PostgreSQL 암호
         - name: POSTGRES_DB
           value: mydatabase  # PostgreSQL 데이터베이스 이름
+        volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/main_data  # PostgreSQL 데이터 디렉토리 마운트 경로
 ---
 apiVersion: v1
 kind: Service
@@ -37,3 +40,14 @@ spec:
     port: 5432
     targetPort: 5432
   type: ClusterIP 
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-storage-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi  # 필요에 따라 스토리지 크기 조정 가능

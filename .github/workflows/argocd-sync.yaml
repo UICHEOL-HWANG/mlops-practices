@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - master
-    paths:
-      - 'deploy/argocd'
     # 특정 파드 생성 전 오류가 났을 시 비상망으로 운영하는 CI
 jobs:
   build-and-deploy:
@@ -43,10 +41,17 @@ jobs:
         run: |
           argocd login $ARGOCD_IP --username $ARGOCD_ID --password $ARGOCD_PW --insecure
 
+      - name: Update Argo CD App
+        run: |
+          # 기존 애플리케이션에 새로운 경로 추가
+          argocd app set worker --repo https://github.com/UICHEOL-HWANG/mlops-practices.git --path config  # 추가 경로
+
+
+
       - name: Sync Argo CD App
         run: |
-          argocd app sync main-db
+          argocd app sync worker
 
       - name: Wait for Argo CD App to be synced
         run: |
-          argocd app wait main-db --sync
+          argocd app wait worker--sync

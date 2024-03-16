@@ -4,7 +4,6 @@ metadata:
   name: zookeeper-deployment
   labels:
     app: zookeeper
-  namespace: kafka-server
 spec:
   replicas: 1
   selector:

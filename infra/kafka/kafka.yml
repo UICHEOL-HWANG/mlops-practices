@@ -4,6 +4,7 @@ metadata:
   name: kafka-deployment
   labels:
     app: kafka
+  namespace: kafka-server
 spec:
   replicas: 1
   selector:

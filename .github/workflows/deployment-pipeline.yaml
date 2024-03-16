@@ -48,7 +48,7 @@ jobs:
         run: |
           argocd app create main-repogitory \
             --repo https://github.com/UICHEOL-HWANG/mlops-practices.git \
-            --path ./** \
+            --path ./infra/** \
             --dest-server https://kubernetes.default.svc \
 
       - name: Sync Argo CD App

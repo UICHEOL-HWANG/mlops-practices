@@ -26,7 +26,6 @@ jobs:
       env:
         GCP_KEY: ${{ secrets.GCP_KEY }}  # GitHub Secrets에서 GCP_KEY를 가져옴
       run: |
-        echo $GCP_KEY | cat > ./key.json
         cat ./key.json | helm registry login -u _json_key --password-stdin asia-northeast3-docker.pkg.dev
 
 
@@ -58,7 +57,7 @@ jobs:
           --repo asia-northeast3-docker.pkg.dev \
           --helm-chart cheorish/helm\
           --helm-set image.name=asia-northeast3-docker.pkg.dev/cheorish/docker/api \
-          --revision 0.0.1 \
+          --revision 0.0.3 \
           --dest-server https://kubernetes.default.svc \
           --dest-namespace api \
           --upsert

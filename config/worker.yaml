@@ -16,10 +16,3 @@ spec:
       - name: mlops-worker
         image: uicheolhwang/mlops-worker:0.0.1
         command: ['/bin/bash', '-c']
-        volumeMounts:
-        - name: data-volume
-          mountPath: /mnt/data
-      volumes:
-      - name: data-volume
-        persistentVolumeClaim:
-          claimName: worker-pvc

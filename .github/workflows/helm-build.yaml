@@ -4,7 +4,8 @@ on:
   push:
     branches:
       - master
-
+    paths:
+      - 'deploy/api'
       # helm 차트 빌드용 CI
       
 jobs:

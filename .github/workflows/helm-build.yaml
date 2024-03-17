@@ -54,7 +54,7 @@ jobs:
       run: |
         argocd app create mlops-api \
           --repo asia-northeast3-docker.pkg.dev \
-          --helm-chart cheorish/helm\
+          --helm-chart cheorish/helm/helm-api \
           --helm-set image.name=asia-northeast3-docker.pkg.dev/cheorish/docker/api \
           --revision 0.0.3 \
           --dest-server https://kubernetes.default.svc \

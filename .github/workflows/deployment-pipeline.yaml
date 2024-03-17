@@ -56,5 +56,5 @@ jobs:
           argocd app sync worker 
 
       - name: Wait for Argo CD App to be synced
-        run: |
+        run: | 
           argocd app wait worker --sync 

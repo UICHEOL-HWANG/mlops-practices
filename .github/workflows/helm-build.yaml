@@ -47,7 +47,7 @@ jobs:
         ARGOCD_IP: ${{ secrets.ARGOCD_IP }}
         ARGOCD_ID: ${{ secrets.ARGOCD_ID }}
         ARGOCD_PW: ${{ secrets.ARGOCD_PW }}
-      run: |
+      run: | 
         argocd login $ARGOCD_IP --username $ARGOCD_ID --password $ARGOCD_PW --insecure
 
     - name: Deploy to Kubernetes using Argo CD

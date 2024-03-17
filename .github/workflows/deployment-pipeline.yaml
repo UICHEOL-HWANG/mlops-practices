@@ -50,7 +50,7 @@ jobs:
             --repo https://github.com/UICHEOL-HWANG/mlops-practices.git \
             --path infra/model \
             --dest-server https://kubernetes.default.svc \
-            --dest-namespace mlflow-ops \
+            --dest-namespace mlflow \
       - name: Sync Argo CD App
         run: |
           argocd app sync mlflow-ops 

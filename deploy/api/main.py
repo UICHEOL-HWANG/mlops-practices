@@ -8,12 +8,12 @@ from PIL import Image
 import io
 import numpy as np
 import os 
+import base64
 
 os.environ["MLFLOW_S3_ENDPOINT_URL"] = "http://34.64.80.245:9000"
 os.environ["MLFLOW_TRACKING_URI"] = "http://34.22.82.181:5000"
 os.environ["AWS_ACCESS_KEY_ID"] = "minio"
 os.environ["AWS_SECRET_ACCESS_KEY"] = "miniostorage"
-
 
 # Create a FastAPI instance
 app = FastAPI()
@@ -26,7 +26,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 model = mlflow.pytorch.load_model("runs:/2fd50ae92cbd43efbe305a1d7f457596/model")
 model.eval()
 
@@ -37,5 +36,12 @@ async def predict(file: UploadFile = File(...)):
     image = image.resize((28, 28))
     image = np.array(image)
     image = torch.tensor(image).float().unsqueeze(0).unsqueeze(0) / 255.0
+    
     prediction = model(image).argmax(1).item()
-    return JSONResponse(content={"prediction": prediction})
+    
+    # 이미지를 Base64로 인코딩
+    buffered = io.BytesIO()
+    image.save(buffered, format="JPEG")
+    img_str = base64.b64encode(buffered.getvalue()).decode()
+    
+    return JSONResponse(content={"prediction": prediction, "image": img_str})

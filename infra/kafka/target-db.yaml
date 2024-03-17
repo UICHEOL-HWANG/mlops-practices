@@ -19,16 +19,16 @@ spec:
         - containerPort: 5432
         env:
         - name: POSTGRES_USER
-          value: myuser  # PostgreSQL 사용자 이름
+          value: targetuser  # PostgreSQL 사용자 이름
         - name: POSTGRES_PASSWORD
-          value: mypassword  # PostgreSQL 암호
+          value: targetpassword  # PostgreSQL 암호
         - name: POSTGRES_DB
-          value: mydatabase  # PostgreSQL 데이터베이스 이름
+          value: targetdatabase  # PostgreSQL 데이터베이스 이름
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgres-server-service
+  name: kafka-target-database
 spec:
   selector:
     app: postgres-server

@@ -5,6 +5,8 @@ on:
     branches:
       - master
     # 특정 파드 생성 전 오류가 났을 시 비상망으로 운영하는 CI
+    pahts:
+      - 'deploy/argocd'
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest

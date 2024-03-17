@@ -16,7 +16,7 @@ jobs:
 
     - name: Login to Google Cloud
       env:
-        GCP_KEY: ${{ secrets.GCP_KEY }}  # GitHub Secrets에서 GCP_KEY를 가져옴
+        GCP_KEY: ${{ secrets.GCP_KEY }}
       run: |
         echo $GCP_KEY | cat > ./key.json
         cat ./key.json | docker login -u _json_key --password-stdin asia-northeast3-docker.pkg.dev

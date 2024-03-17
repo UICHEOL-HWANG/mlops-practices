@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - master
-    paths:
-      - 'deploy/argocd'
     # 특정 파드 생성 전 오류가 났을 시 비상망으로 운영하는 CI
 jobs:
   build-and-deploy:
@@ -46,5 +44,5 @@ jobs:
       - name: Update Argo CD App
         run: |
           # 기존 애플리케이션에 새로운 경로 추가
-          argocd app set worker --repo https://github.com/UICHEOL-HWANG/mlops-practices.git --path infra/kafka --dest-namespace worker
+          argocd app set worker --repo https://github.com/UICHEOL-HWANG/mlops-practices.git --path config --dest-namespace worker
 

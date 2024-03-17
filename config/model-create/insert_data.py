@@ -8,7 +8,7 @@ conn = psycopg2.connect(
     dbname="mydatabase",
     user="myuser",
     password="mypassword",
-    host="10.16.1.131",
+    host="10.15.36.232",
     port=5432
 )
 cur = conn.cursor()

@@ -10,8 +10,8 @@ import numpy as np
 import os 
 import base64
 
-os.environ["MLFLOW_S3_ENDPOINT_URL"] = "http://34.64.80.245:9000"
-os.environ["MLFLOW_TRACKING_URI"] = "http://34.22.82.181:5000"
+os.environ["MLFLOW_S3_ENDPOINT_URL"] = "http://34.64.112.82:9000"
+os.environ["MLFLOW_TRACKING_URI"] = "http://34.47.75.98:5000"
 os.environ["AWS_ACCESS_KEY_ID"] = "minio"
 os.environ["AWS_SECRET_ACCESS_KEY"] = "miniostorage"
 

@@ -4,12 +4,14 @@ from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
 import mlflow.pytorch
 import torch
+import torch.nn
 from PIL import Image
 import matplotlib.pyplot as plt
 import io
 import numpy as np
 import os 
 import base64
+from schemas import PredictIn,PredictOut
 
 os.environ["MLFLOW_S3_ENDPOINT_URL"] = "http://34.64.112.82:9000"
 os.environ["MLFLOW_TRACKING_URI"] = "http://34.47.75.98:5000"
@@ -56,3 +58,29 @@ async def predict(file: UploadFile = File(...)):
     
     # 예측 결과를 JSON으로 반환합니다.
     return JSONResponse(content={"prediction": np.argmax(prediction), "chart": img_str})
+
+
+@app.post("/accuracypredict", response_model=PredictOut)
+async def accuracy_predict(predict_input: PredictIn):
+    # 이미지 전처리
+    image = Image.open(io.BytesIO(predict_input.image_data)).convert('L')
+    transform = transforms.Compose([
+        transforms.Resize((28, 28)),
+        transforms.ToTensor(),
+        transforms.Normalize((0.5,), (0.5,))
+    ])
+    image_tensor = transform(image).unsqueeze(0)
+
+    # 모델 인스턴스화 및 예측
+    input_size = 784  # 28*28
+    hidden_size1 = 128
+    hidden_size2 = 64
+    output_size = 10  # 0-9 숫자
+    model = Network(input_size, hidden_size1, hidden_size2, output_size)
+    
+    output = model(image_tensor)
+    _, predicted = torch.max(output.data, 1)
+    correct = (predicted == predict_input.label).sum().item()
+    accuracy = correct / len(image_tensor)
+
+    return PredictOut(accuracy=accuracy)

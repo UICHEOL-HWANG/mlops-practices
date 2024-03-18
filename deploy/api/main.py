@@ -26,7 +26,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-model = mlflow.pytorch.load_model("runs:/2fd50ae92cbd43efbe305a1d7f457596/model")
+model = mlflow.pytorch.load_model("runs:/508bfe3947f6400f8fd6d6b68634b33c/model")
 model.eval()
 
 @app.post("/predict")

@@ -4,10 +4,8 @@ on:
   push:
     branches:
       - master
-    paths:
-      - 'deploy/api'
+
       # helm 차트 빌드용 CI
-      
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest  # 러너 환경
@@ -22,18 +20,18 @@ jobs:
         echo $GCP_KEY | cat > ./key.json
         cat ./key.json | docker login -u _json_key --password-stdin asia-northeast3-docker.pkg.dev
 
-    # - name: Login to helm storage
-    #   env:
-    #     GCP_KEY: ${{ secrets.GCP_KEY }}  # GitHub Secrets에서 GCP_KEY를 가져옴
-    #   run: |
-    #     cat ./key.json | helm registry login -u _json_key --password-stdin asia-northeast3-docker.pkg.dev
+    - name: Login to helm storage
+      env:
+        GCP_KEY: ${{ secrets.GCP_KEY }}  # GitHub Secrets에서 GCP_KEY를 가져옴
+      run: |
+        cat ./key.json | helm registry login -u _json_key --password-stdin asia-northeast3-docker.pkg.dev
 
 
-    # - name: Build and push Docker image
-    #   working-directory: ./deploy/api
-    #   run: |
-    #     docker build . -t asia-northeast3-docker.pkg.dev/cheorish/docker/api
-    #     docker push asia-northeast3-docker.pkg.dev/cheorish/docker/api
+    - name: Build and push Docker image
+      working-directory: ./deploy/api
+      run: |
+        docker build . -t asia-northeast3-docker.pkg.dev/cheorish/docker/api
+        docker push asia-northeast3-docker.pkg.dev/cheorish/docker/api
 
 
     - name: Install Argo CD CLI

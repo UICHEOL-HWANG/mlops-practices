@@ -3,15 +3,14 @@ import mlflow
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
 import mlflow.pytorch
+from IPython.display import HTML, Image
 import torch
-import torch.nn
 from PIL import Image
 import matplotlib.pyplot as plt
 import io
 import numpy as np
 import os 
 import base64
-from schemas import PredictIn,PredictOut
 
 os.environ["MLFLOW_S3_ENDPOINT_URL"] = "http://34.64.112.82:9000"
 os.environ["MLFLOW_TRACKING_URI"] = "http://34.47.75.98:5000"
@@ -33,31 +32,27 @@ model = mlflow.pytorch.load_model("runs:/508bfe3947f6400f8fd6d6b68634b33c/model"
 model.eval()
 
 
+# 예측 엔드포인트
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
+    # 파일 내용을 읽음
     contents = await file.read()
+    # 이미지로 변환하고 그레이스케일로 처리
     image = Image.open(io.BytesIO(contents)).convert('L')
+    # 28x28로 리사이즈
     image = image.resize((28, 28))
-    image_np = np.array(image)
-    image = torch.tensor(image_np).float().unsqueeze(0).unsqueeze(0) / 255.0
-    
-    # 모델로부터 예측 결과를 얻습니다.
-    with torch.no_grad():
-        prediction = model(image).softmax(1).numpy()
+    # NumPy 배열로 변환하고 정규화
+    image_np = np.array(image) / 255.0
+    # 모델 입력을 위해 차원 추가
+    tensor_image = torch.tensor(image_np).unsqueeze(0).unsqueeze(0).float()
 
-    # 예측 결과를 시각화합니다.
-    fig, ax = plt.subplots()
-    ax.imshow(image_np, cmap='gray', interpolation='none')
-    ax.set_title(f'Predict Number is {np.argmax(prediction)}')
-    # 차트를 이미지 버퍼로 변환합니다.
-    buffer = io.BytesIO()
-    plt.savefig(buffer, format='png')
-    plt.close(fig)
-    buffer.seek(0)
-    img_str = base64.b64encode(buffer.getvalue()).decode()
-    
-    # 예측 결과를 JSON으로 반환합니다.
-    return JSONResponse(content={"prediction": np.argmax(prediction), "chart": img_str})
+    # 모델로 예측 수행
+    with torch.no_grad():
+        prediction = model(tensor_image)
+        predicted_index = prediction.argmax(1).item()
+
+    # 예측 결과와 사용자 이미지를 반환
+    return JSONResponse(content={"prediction": predicted_index, "original_image": base64.b64encode(contents).decode('utf-8')})
 
 
 @app.post("/accuracypredict", response_model=PredictOut)

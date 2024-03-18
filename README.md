@@ -1,4 +1,4 @@
-# 연습용 클러스터 구축 
+# Mnist Create Cluster 
 
 
 ### 2024-03-04 ~ 2024-03-16 
@@ -17,3 +17,19 @@
 2-2. artifact, database를 위한 pvc 볼륨 생성 -> 노드를 종료시켰다 시작해도 데이터 보존 
 
 2-3. CI Github actions flow 컴팩트 다운
+
+-----
+# 완성본 아키텍처 
+
+![아키텍처](./image/kubernetes-cluster.drawio.png)
+
+1. 주요사항 
+- 로컬 푸시 → github actions → argocd → helm chart & Deployment 이미지 사용 
+
+2. MLflow
+- 모델 저장 및 평가 관리 & 아티팩트 스토어
+
+3. kafka
+- 기존 MNIST DATA를 관리했던 main_db 데이터를 추출하며 시간대별로 accuracy 값 추적 
+
+4. ingress API를 통해 보안 관리

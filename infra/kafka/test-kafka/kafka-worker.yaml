@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-worker
+  template:
+    metadata:
+      labels:
+        app: kafka-worker
+    spec:
+      containers:
+      - name: kafka-worker
+        image: uicheolhwang/mlops-worker:0.0.1
+        command: ["/bin/sh"]
+        args: ["-c", "while true; do sleep 1000; done"]

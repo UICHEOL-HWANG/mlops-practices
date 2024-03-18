@@ -9,7 +9,7 @@ COPY . /usr/api_serve/
 
 # 필요한 Python 패키지 설치
 RUN pip install -U pip &&\
-    pip install boto3 mlflow "fastapi[all]" psycopg2-binary torch
+    pip install boto3 mlflow "fastapi[all]" psycopg2-binary torch matplotlib
     
 
 # FastAPI 애플리케이션 실행 명령 설정
